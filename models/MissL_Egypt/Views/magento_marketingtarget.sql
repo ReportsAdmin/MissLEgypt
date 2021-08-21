@@ -1,1 +1,1 @@
-SELECT * from `noted-computing-279322.halo_1_1.magento_sales_target`
+SELECT * from `noted-computing-279322.halo_1_1_Egypt.magento_sales_target`

@@ -2,7 +2,7 @@ select *, from
 (select prodinsights.*,stock.inventory,stock.mrp,stock.selling_price from (
 (select prod.*,image.image from(
 (select distinct * from (
-select * , 'MissL' Halo_Country
+select * , 'MissLEgypt' Halo_Country
 from(
 select
 -- c.startdate date_start,
@@ -23,11 +23,11 @@ a.orders,
 a.units,
 a.revenue,
 a.category_id,
-a.Overall_revenue,
-a.Overall_units,
-a.Overall_orders
+Overall_revenue,
+Overall_units,
+Overall_orders
 from
-(select test.*,test2.category,test2.sub_category,test2.category_id from
+(select test.*,test2.category,test2.sub_category,test2.category_id,test2.Cstore_id from
 (select
  product_id,
  product_sku,
@@ -40,7 +40,7 @@ sum(total_item_price) Overall_revenue,
 sum(case when order_status in ('successful') then total_item_price  end)  revenue,
 Sum(case when order_status in ('successful') then product_quantity end) units,
 count(distinct case when order_status in ('successful') then order_id end) orders
-from `noted-computing-279322.halo_1_1.fOrders`
+from `noted-computing-279322.halo_1_1_Egypt.fOrders`
 group by product_id,
 product_sku,
 product_title,
@@ -50,13 +50,13 @@ store_id
     left join
 (select distinct product_id, category, sub_category, prod_name,category_id,
   case when store_id = 0 then 4 else store_id end Cstore_id
- from `noted-computing-279322.halo_1_1.magento_missl_productscat`)test2
+ from `noted-computing-279322.halo_1_1_Egypt.magento_missl_productscat`)test2
 on test.product_id = cast(test2.product_id as string)
 -- and test.product_title = test2.prod_name
 and test.store_id = cast(test2.Cstore_id as STRING)
 )a
 left join
-`noted-computing-279322.halo_1_1.fGABaseSKU` c
+`noted-computing-279322.halo_1_1_Egypt.fGABaseSKU` c
 on cast(c.D_ga_productSku as string) = cast(a.Product_id as string)
 --and a.category = c.D_ga_productCategoryHierarchy
 --and a.product_title = c.D_ga_productName
@@ -66,9 +66,9 @@ where product_id IS NOT NULL
 ) where date_start>='2018-01-1'
 )prod
 left join
-(select distinct Product_id, Image from `noted-computing-279322.halo_1_1.fProductImage`)image
+(select distinct Product_id, Image from `noted-computing-279322.halo_1_1_Egypt.fProductImage`)image
 on prod.product_id = image.Product_id)
 )prodinsights
 left join
-(select * from `noted-computing-279322.halo_1_1.fProductStock`)stock
+(select * from `noted-computing-279322.halo_1_1_Egypt.fProductStock`)stock
 on prodinsights.product_id = stock.productid) )

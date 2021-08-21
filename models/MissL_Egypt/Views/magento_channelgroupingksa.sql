@@ -1,1 +1,0 @@
-SELECT * from `noted-computing-279322.halo_1_1.channel_ksa`

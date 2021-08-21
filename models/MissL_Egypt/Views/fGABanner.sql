@@ -1,7 +1,7 @@
-select StartDate,D_ga_internalPromotionId, D_ga_internalPromotionName,
-D_ga_internalPromotionPosition, M_ga_internalPromotionClicks, M_ga_internalPromotionViews from(
-select * except(row_number) from(
-select *,row_number() over (partition by StartDate,D_ga_internalPromotionId, D_ga_internalPromotionName,
-D_ga_internalPromotionPosition, M_ga_internalPromotionClicks, M_ga_internalPromotionViews
-order by _daton_batch_runtime desc) as row_number from `noted-computing-279322.MissL1.halo_ga1_216655333_banner`)
-where row_number=1)
+select  * from (
+SELECT * except(row_number)
+FROM (SELECT *,ROW_NUMBER() OVER (PARTITION BY D_ga_date,D_ga_productSku,D_ga_productCategoryHierarchy,D_ga_productName
+                                                order by _daton_batch_runtime desc) row_number
+FROM `noted-computing-279322.MissL1.halo_ga_egypt_216665006_category_product`)
+WHERE row_number = 1
+)
