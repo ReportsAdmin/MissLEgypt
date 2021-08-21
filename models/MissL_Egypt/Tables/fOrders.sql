@@ -14,7 +14,7 @@ select ad_cat_id,checkout_type,lower(coupon_code)coupon_code,currency_iso,is_ad_
    total_item_price Net_Revenue,null RefundRevenue,null WebPrice,cast(case when increment_id is null then 1 else 0 end as boolean) is_item_returned,
    'null' DeliveryOption,totalitempricenew,product_title,store_id
 from(
-select cast(product_id as string) product_id,variantid,'MissL' Halo_Country,
+select cast(product_id as string) product_id,variantid,'MissLEgypt' Halo_Country,
 * except(product_id,variantid)
 from(
 select
@@ -43,7 +43,7 @@ select * except(ranki),
       case when rank() over(partition by user_id,Is_Successful_Order order by order_datetime) = 1 and order_status in ('successful') then 1 else 0 end  is_new_customer1
 from(
 select *,
-      (case when base_row_total_incl_tax > 0 then
+            (case when base_row_total_incl_tax > 0 then
       base_row_total_incl_tax-base_discount_amount_item +
       ((shipping_amt)/(qty_ordered_item))*product_quantity else 0 end)
       - (case when gift_card_amount <> 0 then (base_row_total_incl_tax/subtotal_incl_tax)*(-1*gift_card_amount) else 0 end)
@@ -65,6 +65,7 @@ os.order_status_detail order_status,
 os.Is_Successful_Order,
 ord.coupon_code,
 ord.customer_id,
+ord.subtotal_incl_tax,
 ord.base_discount_amount,
   ord.gift_card_amount,
 cast(ord.base_grand_total as float64) as base_grand_total,
@@ -72,7 +73,6 @@ ord.increment_id,
 lower(ord.customer_email) user_id,
 safe_divide(ord.base_tax_amount,count(distinct item.item_id) over (partition by ord.entity_id)) as tax_amount,
 ord.order_currency_code as currency_iso,
-ord.subtotal_incl_tax,
 cast(ord.total_qty_ordered as float64) total_qty_ordered1,
 count(distinct item.item_id) over (partition by ord.entity_id) total_qty_ordered,
 cast(ord.base_shipping_incl_tax as float64) base_shipping_amount,
@@ -111,35 +111,35 @@ address.city,
 address.country_id,
 --
 user_id.user_info as userid
-from `noted-computing-279322.halo_1_1.magento_transaction` as ord
-left join `noted-computing-279322.halo_1_1.magento_transaction_details` item
+from `noted-computing-279322.halo_1_1_Egypt.magento_transaction` as ord
+left join `noted-computing-279322.halo_1_1_Egypt.magento_transaction_details` item
 on ord.entity_id=item.order_id
-left join `noted-computing-279322.halo_1_1.refOrderStatus` os
+left join `noted-computing-279322.halo_1_1_Egypt.refOrderStatus` os
 on ord.status=os.orderstatus
-left join `noted-computing-279322.halo_1_1.magento_payment` pay
+left join `noted-computing-279322.halo_1_1_Egypt.magento_payment` pay
 on ord.entity_id=pay.parent_id
 left join (select order_id, sum(case when base_row_total_incl_tax > 0 then qty_ordered end) as qty_ordered_item from
-`noted-computing-279322.halo_1_1.magento_transaction_details`
+`noted-computing-279322.halo_1_1_Egypt.magento_transaction_details`
 -- where order_id = 2694
 group by 1
  )item1
 on ord.entity_id=item1.order_id
 -- left join
--- `noted-computing-279322.halo_1_1.refProducts` pro
+-- `noted-computing-279322.halo_1_1_Egypt.refProducts` pro
 -- on cast(item.product_id as string)=pro.product_id
 left join
-`noted-computing-279322.halo_1_1.refUsers` user_id
+`noted-computing-279322.halo_1_1_Egypt.refUsers` user_id
 on ord.customer_email=user_id.user_info
 left join
-`noted-computing-279322.halo_1_1.magento_orderhist` stathist
+`noted-computing-279322.halo_1_1_Egypt.magento_orderhist` stathist
 on ord.entity_id=stathist.parent_id
 left join
-`noted-computing-279322.halo_1_1.magento_address` address
+`noted-computing-279322.halo_1_1_Egypt.magento_address` address
 on ord.entity_id=address.parent_id
 ))))) where product_price>=0
 ) st
 left join
-`noted-computing-279322.halo_1_1.fGATransactions` ga
+`noted-computing-279322.halo_1_1_Egypt.fGATransactions` ga
 on st.increment_id= ga.order_id
 left join
 `noted-computing-279322.halo_1_1.refExchangerate` ex
@@ -149,21 +149,6 @@ left join
 on st.country_id=country.CountryCode
 ))))forders1
 left join
-(select distinct lower(code) as influencerscode from `noted-computing-279322.halo_1_1.magento_influencerscode` where Currency = 'SAR')coupon
+(select distinct lower(code) as influencerscode from `noted-computing-279322.halo_1_1_Egypt.magento_influencerscode` where Currency = 'EGP')coupon
 on forders1.coupon_code=coupon.influencerscode)where order_date > '2020-05-05' )
-union all
-(select distinct cast(ad_cat_id as int64) ad_cat_id,checkout_type,coupon_code,currency_iso,
-cast(is_ad_order as bool) is_ad_order,cast(is_guest_order as bool) is_guest_order,
-cast(is_new_customer as int64) is_new_customer,cast(item_discount as float64) item_discount,
-cast(increment_id as string) increment_id,cast(no_promo_perc_discount as int64) no_promo_perc_discount,
-order_date,cast(order_datetime as datetime) order_datetime,cast(order_id as string) order_id,
-order_item_id,order_status,Paid_NonPaid,cast(perc_discount as float64) perc_discount,
-cast(product_id as string) product_id,cast(product_launch_days as int64) product_launch_days,
-cast(total_item_price_wo_discount as float64) total_item_price_wo_discount,user_id,variantid,
-cast(product_price as float64) product_price,cast(product_quantity as float64) product_quantity,DeviceCategory,
-Country,0 as shipping_amnt, cast(shipping_price as float64) shipping_price,cast(tax_amount as float64) tax_amount,
-cast(product_sku as string) product_sku,cast(Is_Successful_Order as bool) Is_Successful_Order,mktplace_name,Halo_country,
-city,cast(total_item_price as float64) total_item_price,cast(Net_Revenue as float64) Net_Revenue,
-cast(RefundRevenue as int64) RefundRevenue,cast(WebPrice as int64) WebPrice,cast(is_item_returned as bool) is_item_returned,
-DeliveryOption,cast(totalitempricenew as float64) totalitempricenew,influencerscode,'null' as product_title,'null' as store_id
-from `noted-computing-279322.halo_1_1.magento_historicorders`))
+)

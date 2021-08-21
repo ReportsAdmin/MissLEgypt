@@ -1,3 +1,4 @@
+
 Select
 total_sent_through_medium,
 total_sent_through_medium__st,
@@ -29,4 +30,4 @@ code,
 updated_date,
 __sdc_spreadsheet_id
 from `noted-computing-279322.influencer_codes.Influencer_Codes`
-where lower(country__ksa_egypt_) = 'ksa'
+where lower(country__ksa_egypt_) = 'egypt'
