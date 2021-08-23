@@ -1,3 +1,4 @@
+
 select ta.*,
 concat(format_date('%d %b %y',parse_date('%Y-%m-%d',Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',Enddate))) Value_DateRange,
 concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Enddate))) PrevValue_DateRange,
@@ -14,26 +15,36 @@ KPI,
 period_flag as XTD,
 period_id date,
 ifnull(Value,0) Value,
+
 ifnull(lag(Value,1) over (partition by Halo_country,KPI,period_flag order by period_id),0) prevvalue,
+
 ifnull(case when extract(year from parse_date('%Y-%m-%d',Startdate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Startdate),1) over (partition by Halo_country,KPI,period_flag
 order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
 )) then lag(Value,1) over (partition by Halo_country,KPI,period_flag
 order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
 ) end,0) prevyearvalue,
+
 Startdate,
 Enddate,
+
 lag(Startdate,1) over (partition by Halo_country,KPI,period_flag order by period_id) PrevX_Startdate	,
+
 lag(Enddate,1) over (partition by Halo_country,KPI,period_flag order by period_id) PrevX_Enddate,
+
 case when extract(year from parse_date('%Y-%m-%d',Startdate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Startdate),1) over (partition by Halo_country,KPI,period_flag
 order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
 )) then lag(Startdate,1) over (partition by Halo_country,KPI,period_flag
 order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
 ) end PrevYearX_Startdate,
+
 case when extract(year from parse_date('%Y-%m-%d',Enddate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Enddate),1) over (partition by Halo_country,KPI,period_flag
 order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
 )) then  lag(Enddate,1) over (partition by Halo_country,KPI,period_flag
 order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
 ) end PrevYearX_Enddate
+
+
+
 -- prvValue
 from
 (
@@ -1297,9 +1308,7 @@ and coalesce(date,dateweek,datemonth,datequarter,dateyear) is not null
 ) ta,
 `noted-computing-279322.halo_1_1_Egypt.refKPI` tb
 where ta.KPI = tb.KPI_VARIABLE
-
 union all
-
 select ta.*,
 concat(format_date('%d %b %y',parse_date('%Y-%m-%d',Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',Enddate))) Value_DateRange,
 concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Enddate))) PrevValue_DateRange,
@@ -1310,6 +1319,8 @@ tb.KPI_ID,
 tb.KPI_FORMAT
 from
 (
+
+
 select
 Halo_country,
 'AOV' KPI,
@@ -1339,6 +1350,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'conversion_rate_per' KPI,
@@ -1368,6 +1380,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ROAS' KPI,
@@ -1397,6 +1410,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CAC' KPI,
@@ -1426,6 +1440,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'productviews_cart_per' KPI,
@@ -1455,6 +1470,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'cart_checkout_per' KPI,
@@ -1484,6 +1500,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'checkout_conversion_per' KPI,
@@ -1513,6 +1530,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'login_shipping_per' KPI,
@@ -1542,6 +1560,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'shipping_payment_per' KPI,
@@ -1571,6 +1590,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'payment_txn_per' KPI,
@@ -1600,6 +1620,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'bounce_rate_per' KPI,
@@ -1629,6 +1650,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'paid_conversion_rate_per' KPI,
@@ -1658,6 +1680,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'unpaid_conversion_rate_per' KPI,
@@ -1687,6 +1710,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'margin_per' KPI,
@@ -1716,6 +1740,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'OtherOrders' KPI,
@@ -1745,6 +1770,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_F' KPI,
@@ -1774,6 +1800,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'conversion_rate_F_per' KPI,
@@ -1803,6 +1830,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ROAS_F' KPI,
@@ -1832,6 +1860,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CTR_F_per' KPI,
@@ -1861,6 +1890,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'add_to_cart_ratio_F_per' KPI,
@@ -1890,6 +1920,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'cost_per_click_F' KPI,
@@ -1919,6 +1950,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CostPerSession_F' KPI,
@@ -1948,6 +1980,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CostPerTransaction_F' KPI,
@@ -1977,6 +2010,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'bounce_rate_F_per' KPI,
@@ -2006,6 +2040,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_G' KPI,
@@ -2035,6 +2070,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'conversion_rate_G_per' KPI,
@@ -2064,6 +2100,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ROAS_G' KPI,
@@ -2093,6 +2130,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CTR_G_PER' KPI,
@@ -2122,6 +2160,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'add_to_cart_ratio_G_per' KPI,
@@ -2151,6 +2190,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CostPerClick_G' KPI,
@@ -2180,6 +2220,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CostPerSession_G' KPI,
@@ -2209,6 +2250,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CostPerTransaction_G' KPI,
@@ -2238,6 +2280,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'bounce_rate_G_per' KPI,
@@ -2267,6 +2310,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'dilution' KPI,
@@ -2296,6 +2340,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV' KPI,
@@ -2325,6 +2370,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'UPT' KPI,
@@ -2354,6 +2400,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'returns_volume_per' KPI,
@@ -2383,6 +2430,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'returns_value_per' KPI,
@@ -2412,6 +2460,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'cancellation_per' KPI,
@@ -2441,6 +2490,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'atv_first_purchase' KPI,
@@ -2470,6 +2520,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'atv_repeat_purchase' KPI,
@@ -2499,6 +2550,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Promotion_Dilution_Per' KPI,
@@ -2528,6 +2580,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Return_Dilution_Per' KPI,
@@ -2557,6 +2610,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AUR' KPI,
@@ -2586,6 +2640,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CTR_Per' KPI,
@@ -2615,6 +2670,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Cart_to_Detail_Per' KPI,
@@ -2644,6 +2700,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Buy_to_Detail_Per' KPI,
@@ -2673,6 +2730,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Cart_to_Login' KPI,
@@ -2702,6 +2760,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Login_to_Shipping' KPI,
@@ -2731,6 +2790,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'shipping_to_payment' KPI,
@@ -2760,6 +2820,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Payment_to_transcation' KPI,
@@ -2789,6 +2850,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ExitRate' KPI,
@@ -2818,6 +2880,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'sessions_to_Productviews' KPI,
@@ -2847,6 +2910,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'LP_bounceRate' KPI,
@@ -2876,6 +2940,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'LP_ConvRate' KPI,
@@ -2905,6 +2970,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'H_bounceRate' KPI,
@@ -2934,6 +3000,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'H_ConvRate' KPI,
@@ -2963,6 +3030,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'P_bounceRate' KPI,
@@ -2992,6 +3060,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'P_ConvRate' KPI,
@@ -3021,6 +3090,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'H_bounce_rate' KPI,
@@ -3050,6 +3120,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'H_Non_Bounce_Sessions' KPI,
@@ -3079,6 +3150,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'H_Conv_Rate' KPI,
@@ -3108,6 +3180,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'LP_PvtoCart' KPI,
@@ -3137,6 +3210,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Checkout_Conversion_Rate' KPI,
@@ -3166,6 +3240,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Total_Sales_Value_Without_VAT' KPI,
@@ -3195,6 +3270,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'cancellation_order_per' KPI,
@@ -3224,6 +3300,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'cod_per' KPI,
@@ -3253,6 +3330,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'cc_per' KPI,
@@ -3282,6 +3360,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'valu_per' KPI,
@@ -3311,6 +3390,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'returned_orders_per' KPI,
@@ -3340,6 +3420,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'sessions_per_visitors' KPI,
@@ -3369,6 +3450,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'pages_per_sessions' KPI,
@@ -3398,6 +3480,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'mobile_per' KPI,
@@ -3427,6 +3510,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'tablet_per' KPI,
@@ -3456,6 +3540,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'desktop_per' KPI,
@@ -3485,6 +3570,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_18_24_per' KPI,
@@ -3514,6 +3600,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_25_34_per' KPI,
@@ -3543,6 +3630,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_35_44_per' KPI,
@@ -3572,6 +3660,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_above_45_per' KPI,
@@ -3601,6 +3690,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'gender_male_newusers_per' KPI,
@@ -3630,6 +3720,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'gender_female_newusers_per' KPI,
@@ -3659,6 +3750,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'new_visitor_sessions_per' KPI,
@@ -3688,6 +3780,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'returning_visitor_sessions_per' KPI,
@@ -3717,6 +3810,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Snapchat_paid_sessions_per' KPI,
@@ -3746,6 +3840,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Snapchat_unpaid_sessions_per' KPI,
@@ -3775,6 +3870,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Facebook_Inhouse_Paid_sessions_per' KPI,
@@ -3804,6 +3900,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Facebook_Dynamic_Remarketing_sessions_per' KPI,
@@ -3833,6 +3930,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Facebook_Unpaid_sessions_per' KPI,
@@ -3862,6 +3960,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Instagram_paid_sessions_per' KPI,
@@ -3891,6 +3990,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Instagram_Unpaid_sessions_per' KPI,
@@ -3920,6 +4020,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'TikTok_paid_sessions_per' KPI,
@@ -3949,6 +4050,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'TikTok_Unpaid_sessions_per' KPI,
@@ -3978,6 +4080,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Others_Sessions_per' KPI,
@@ -4007,6 +4110,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Unique_Visitors' KPI,
@@ -4036,6 +4140,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'avgSessionDuration1' KPI,
@@ -4065,6 +4170,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'avgdailysales' KPI,
@@ -4094,6 +4200,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'avgdailyunits' KPI,
@@ -4123,6 +4230,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'influencersorders_per' KPI,
@@ -4152,6 +4260,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_18_24_sessions_per' KPI,
@@ -4181,6 +4290,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_25_34_sessions_per' KPI,
@@ -4210,6 +4320,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_35_44_sessions_per' KPI,
@@ -4239,6 +4350,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'age_above_45_sessions_per' KPI,
@@ -4268,6 +4380,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'gender_male_sessions_per' KPI,
@@ -4297,6 +4410,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'gender_female_sessions_per' KPI,
@@ -4326,6 +4440,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Snapchat_paid_newusers_per' KPI,
@@ -4355,6 +4470,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Snapchat_unpaid_newusers_per' KPI,
@@ -4384,6 +4500,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Facebook_Inhouse_Paid_newusers_per' KPI,
@@ -4413,6 +4530,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Facebook_Dynamic_Remarketing_newusers_per' KPI,
@@ -4442,6 +4560,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Facebook_Unpaid_newusers_per' KPI,
@@ -4471,6 +4590,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Instagram_paid_newusers_per' KPI,
@@ -4500,6 +4620,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Instagram_Unpaid_newusers_per' KPI,
@@ -4529,6 +4650,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Others_newusers_per' KPI,
@@ -4558,6 +4680,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_MissL10' KPI,
@@ -4587,6 +4710,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Fozaza2u' KPI,
@@ -4616,6 +4740,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Alia10' KPI,
@@ -4645,6 +4770,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Ingy10' KPI,
@@ -4674,6 +4800,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Sahar10' KPI,
@@ -4703,6 +4830,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_MissL10' KPI,
@@ -4732,6 +4860,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_Fozaza2u' KPI,
@@ -4761,6 +4890,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_Alia10' KPI,
@@ -4790,6 +4920,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_Ingy10' KPI,
@@ -4819,6 +4950,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_Sahar10' KPI,
@@ -4848,6 +4980,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_MissL10' KPI,
@@ -4877,6 +5010,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Fozaza2u' KPI,
@@ -4906,6 +5040,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Alia10' KPI,
@@ -4935,6 +5070,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Ingy10' KPI,
@@ -4964,6 +5100,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Sahar10' KPI,
@@ -4993,6 +5130,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Facebook' KPI,
@@ -5022,6 +5160,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Instagram' KPI,
@@ -5051,6 +5190,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Adwords' KPI,
@@ -5080,6 +5220,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_roi_hunter' KPI,
@@ -5109,6 +5250,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_youtube' KPI,
@@ -5138,6 +5280,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_Facebook' KPI,
@@ -5167,6 +5310,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_Instagram' KPI,
@@ -5196,6 +5340,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_Adwords' KPI,
@@ -5225,6 +5370,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_roi_hunter' KPI,
@@ -5254,6 +5400,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_youtube' KPI,
@@ -5283,6 +5430,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'AOV_tiktok' KPI,
@@ -5312,6 +5460,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Facebook' KPI,
@@ -5341,6 +5490,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Instagram' KPI,
@@ -5370,6 +5520,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Adwords' KPI,
@@ -5399,6 +5550,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Sahreofsales_roi_hunter' KPI,
@@ -5428,6 +5580,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_youtube' KPI,
@@ -5457,6 +5610,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_tiktok' KPI,
@@ -5486,6 +5640,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ConversionRate_Facebook' KPI,
@@ -5515,6 +5670,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ConversionRate_Instagram' KPI,
@@ -5544,6 +5700,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ConversionRate_Adwords' KPI,
@@ -5573,6 +5730,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ConversionRate_roi_hunter' KPI,
@@ -5602,6 +5760,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ConversionRate_youtube' KPI,
@@ -5631,6 +5790,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ConversionRate_tiktok' KPI,
@@ -5660,6 +5820,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Other_Social_sessions_per' KPI,
@@ -5689,6 +5850,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Paid_Search_sessions_per' KPI,
@@ -5718,6 +5880,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Internal_Referral_sessions_per' KPI,
@@ -5747,6 +5910,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Email_sessions_per' KPI,
@@ -5776,6 +5940,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Organic_Search_Sessions_per' KPI,
@@ -5805,6 +5970,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Referral_Sessions_per' KPI,
@@ -5834,6 +6000,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Direct_Sessions_per' KPI,
@@ -5863,6 +6030,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'TikTok_paid_newusers_per' KPI,
@@ -5892,6 +6060,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'TikTok_Unpaid_newusers_per' KPI,
@@ -5921,6 +6090,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Other_Social_newusers_per' KPI,
@@ -5950,6 +6120,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Paid_Search_newusers_per' KPI,
@@ -5979,6 +6150,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Internal_Referral_newusers_per' KPI,
@@ -6008,6 +6180,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Email_newusers_per' KPI,
@@ -6037,6 +6210,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Organic_Search_newusers_per' KPI,
@@ -6066,6 +6240,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Referral_newusers_per' KPI,
@@ -6095,6 +6270,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Direct_newusers_per' KPI,
@@ -6124,6 +6300,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Ola10' KPI,
@@ -6153,6 +6330,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Farah10' KPI,
@@ -6182,6 +6360,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_Ola10' KPI,
@@ -6211,6 +6390,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_Farah10' KPI,
@@ -6240,6 +6420,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Ola10' KPI,
@@ -6269,6 +6450,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Farah10' KPI,
@@ -6298,6 +6480,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'confirmation_rate' KPI,
@@ -6327,6 +6510,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'shipment_rate' KPI,
@@ -6356,6 +6540,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'delivery_rate' KPI,
@@ -6385,6 +6570,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'fulfilment_rate' KPI,
@@ -6414,6 +6600,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Emma10' KPI,
@@ -6443,6 +6630,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV_Emma10' KPI,
@@ -6472,6 +6660,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_Emma10' KPI,
@@ -6501,6 +6690,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'total_days_to_close_per' KPI,
@@ -6530,6 +6720,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'total_time_to_confirm_per' KPI,
@@ -6559,6 +6750,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'total_time_to_ship_per' KPI,
@@ -6588,6 +6780,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'total_time_to_deliver_per' KPI,
@@ -6617,6 +6810,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'total_time_to_fulfill_per' KPI,
@@ -6646,6 +6840,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperordermissl2u_per' KPI,
@@ -6675,6 +6870,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ATV Customer Acq missl2u' KPI,
@@ -6704,6 +6900,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Shareofsales_per missl2u' KPI,
@@ -6733,6 +6930,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'CAC Total' KPI,
@@ -6825,6 +7023,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'skus_80_20_per' KPI,
@@ -6854,6 +7053,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'New_customer_Revenue_per' KPI,
@@ -6883,6 +7083,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Existing_customer_Revenue_per' KPI,
@@ -6912,6 +7113,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'Costperorder_Tiktok' KPI,
@@ -6941,6 +7143,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ROAS_1' KPI,
@@ -6970,6 +7173,7 @@ group by 1,2,3,4,5,6,7,8,9
        
                 union all
         
+
 select
 Halo_country,
 'ROAS_2' KPI,
@@ -6997,6 +7201,520 @@ from `noted-computing-279322.halo_1_1_Egypt.fKPIs`
 group by 1,2,3,4,5,6,7,8,9
 )
        
+
+
 ) ta,
 `noted-computing-279322.halo_1_1_Egypt.refKPI` tb
 where ta.KPI = tb.KPI_VARIABLE
+union all
+select ta.*,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',Enddate))) Value_DateRange,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Enddate))) PrevValue_DateRange,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevYearX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevYearX_Enddate))) PrevYearValue_DateRange,
+case when lower(KPI) like '%bounce%' and lower(KPI) not like '%non%bounce' then safe_divide(-(Value-prevValue),prevValue) else safe_divide((Value-prevValue),prevValue) end Change_PrevX,
+case when lower(KPI) like '%bounce%' and lower(KPI) not like '%non%bounce' then safe_divide(-(Value-prevyearvalue),prevyearvalue) else safe_divide((Value-prevyearvalue),prevyearvalue) end Change_PrevYearX,
+tb.KPI_ID,
+tb.KPI_FORMAT
+from
+(
+select
+Halo_country,
+KPI,
+'WTD' date,
+'Week' XTD,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), ISOWEEK) and current_date() then Value else 0 end)Value,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), ISOWEEK), INTERVAL 1 DAY), ISOWEEK) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 WEEK) then Value else 0 end) prevValue,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),ISOWEEK),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then Value else 0 end) prevyearvalue,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), ISOWEEK) and current_date() then date else null end) startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), ISOWEEK) and current_date() then date else '0' end) enddate,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), ISOWEEK), INTERVAL 1 DAY), ISOWEEK) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 WEEK) then date else null end) PrevX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), ISOWEEK), INTERVAL 1 DAY), ISOWEEK) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 WEEK) then date else '0' end) PrevX_Enddate,
+
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),ISOWEEK),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else null end) PrevYearX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),ISOWEEK),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else '0' end) PrevYearX_Enddate
+
+
+
+from `noted-computing-279322.halo_1_1_Egypt.fKPIs`
+where XTD = 'Day'
+--and PARSE_DATE('%Y%m%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), WEEK), INTERVAL 1 DAY), WEEK) and current_date()
+group by Halo_country, KPI
+
+union all
+
+select
+Halo_country,
+KPI,
+'MTD' date,
+'Month' XTD,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), MONTH) and current_date() then Value else 0 end) Value,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 DAY), MONTH) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH) then Value else 0 end) prevValue,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),MONTH),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then Value else 0 end) prevyearvalue,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), MONTH) and current_date() then date else null end) startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), MONTH) and current_date() then date else '0' end) enddate,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 DAY), MONTH) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH) then date else null end) PrevX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 DAY), MONTH) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH) then date else '0' end) PrevX_Enddate,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),MONTH),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else null end) PrevYearX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),MONTH),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else '0' end) PrevYearX_Enddate
+
+from `noted-computing-279322.halo_1_1_Egypt.fKPIs`
+where XTD = 'Day'
+-- and PARSE_DATE('%Y%m%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 2 DAY), MONTH) and current_date()
+group by Halo_country, KPI
+
+union all
+
+select
+Halo_country,
+KPI,
+'QTD' date,
+'Quarter' XTD,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), QUARTER) and current_date() then Value else 0 end) Value,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), QUARTER), INTERVAL 1 DAY), QUARTER) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 QUARTER) then Value else 0 end) prevValue,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),QUARTER),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then Value else 0 end) prevyearvalue,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), QUARTER) and current_date() then  date else null end) startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), QUARTER) and current_date() then  date else '0' end) enddate,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), QUARTER), INTERVAL 1 DAY), QUARTER) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 QUARTER) then date else null  end) PrevX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), QUARTER), INTERVAL 1 DAY), QUARTER) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 QUARTER) then date else '0' end) PrevX_Enddate,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),QUARTER),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else null end) PrevYearX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),QUARTER),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else '0' end) PrevYearX_Enddate
+
+
+
+
+from `noted-computing-279322.halo_1_1_Egypt.fKPIs`
+where XTD = 'Day'
+--and PARSE_DATE('%Y%m%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), QUARTER), INTERVAL 1 DAY), QUARTER) and current_date()
+group by Halo_country, KPI
+
+union all
+
+select
+Halo_country,
+KPI,
+'YTD' date,
+'Year' XTD,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), YEAR) and current_date() then Value else 0 end) Value,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), YEAR), INTERVAL 1 DAY), YEAR) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR) then Value else 0 end) prevValue,
+sum(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),YEAR),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then Value else 0 end) prevyearvalue,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), YEAR) and current_date() then date else null end) startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(CURRENT_DATE(), YEAR) and current_date() then date else '0' end) enddate,
+
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), YEAR), INTERVAL 1 DAY), YEAR) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR) then date else null end) PrevX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), YEAR), INTERVAL 1 DAY), YEAR) and DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR) then date else '0' end) PrevX_Enddate,
+min(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),YEAR),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else null end) PrevYearX_Startdate,
+max(case when PARSE_DATE('%Y-%m-%d', date) between DATE_SUB(DATE_TRUNC(CURRENT_DATE(),YEAR),INTERVAL 1 YEAR) and DATE_SUB(CURRENT_DATE(),INTERVAL 1 YEAR) then date else '0' end) PrevYearX_Enddate
+
+
+from `noted-computing-279322.halo_1_1_Egypt.fKPIs`
+where XTD = 'Day'
+-- and PARSE_DATE('%Y-%m-%d', date) between DATE_TRUNC(DATE_SUB(DATE_TRUNC(CURRENT_DATE(), YEAR), INTERVAL 1 DAY), YEAR) and current_date()
+group by Halo_country, KPI
+) ta,
+`noted-computing-279322.halo_1_1_Egypt.refKPI` tb
+where ta.KPI = tb.KPI_VARIABLE
+union all
+select ta.*,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',Enddate))) Value_DateRange,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Enddate))) PrevValue_DateRange,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevYearX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevYearX_Enddate))) PrevYearValue_DateRange,
+case when lower(KPI) like '%bounce%' and lower(KPI) not like '%non%bounce' then safe_divide(-(Value-prevvalue),prevvalue) else safe_divide((Value-prevvalue),prevvalue) end Change_PrevX,
+case when lower(KPI) like '%bounce%' and lower(KPI) not like '%non%bounce' then safe_divide(-(Value-prevyearvalue),prevyearvalue) else safe_divide((Value-prevyearvalue),prevyearvalue) end Change_PrevYearX,
+tb.KPI_ID,
+tb.KPI_FORMAT
+from
+(
+select
+Halo_country,
+KPI,
+period_flag as XTD,
+period_id date,
+ifnull(Value,0) Value,
+
+ifnull(lag(Value,1) over (partition by Halo_country,KPI,period_flag order by period_id),0) prevvalue,
+
+ifnull(case when extract(year from parse_date('%Y-%m-%d',Startdate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Startdate),1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+)) then lag(Value,1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+) end ,0) prevyearvalue,
+
+Startdate,
+Enddate,
+
+lag(Startdate,1) over (partition by Halo_country,KPI,period_flag order by period_id) PrevX_Startdate	,
+
+lag(Enddate,1) over (partition by Halo_country,KPI,period_flag order by period_id) PrevX_Enddate,
+
+case when extract(year from parse_date('%Y-%m-%d',Startdate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Startdate),1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+)) then lag(Startdate,1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+) end PrevYearX_Startdate,
+
+case when extract(year from parse_date('%Y-%m-%d',Enddate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Enddate),1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+)) then  lag(Enddate,1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+) end PrevYearX_Enddate
+
+
+
+-- prvValue
+from
+(
+select Halo_country,
+KPI,
+coalesce(date,dateweek,datemonth,datequarter,dateyear) period_id,
+CASE WHEN datequarter is null THEN 'Year'
+WHEN datemonth is null THEN 'Quarter'
+WHEN dateweek is null THEN 'Month'
+WHEN date is null THEN 'Week'
+ELSE 'Day' END period_flag,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then
+sum(Value) over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear))
+else Value end Value,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then
+min(Startdate) over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear))
+else Startdate end Startdate,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then
+max(Enddate) over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear))
+else Enddate end Enddate,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then row_number() over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear) order by coalesce(date,dateweek,datemonth,datequarter,dateyear) desc)
+else 1 end week_rno
+from
+(
+select
+Halo_country,
+KPI,
+dateyear,
+datequarter,
+datemonth,
+dateweek,
+date,
+sum(Value) Value,
+min(date) Startdate,
+max(date) Enddate
+-- sum(case when date <
+from
+(
+select
+Halo_country,
+FORMAT_DATE('%Y-%m-%d', date) date,
+FORMAT_DATE('%Y-%W', date) dateweek,
+FORMAT_DATE('%Y-%m', date) datemonth,
+FORMAT_DATE('%Y-%Q', date) datequarter,
+FORMAT_DATE('%Y', date) dateyear,
+Metrics_data.Metric KPI,
+Metrics_data.Data Value,
+max(date) over () current_date
+from (
+select
+Halo_Country,
+date,
+Metrics_data
+from (
+select Halo_Country,date,
+       [
+       
+                STRUCT('Sessions_F' as Metric, Sessions_F as Data)
+            
+                ,
+            
+        
+                STRUCT('Impressions_F' as Metric, Impressions_F as Data)
+            
+                ,
+            
+        
+                STRUCT('Adclicks_F' as Metric, Adclicks_F as Data)
+            
+                ,
+            
+        
+                STRUCT('Addtocarts_F' as Metric, Addtocarts_F as Data)
+            
+                ,
+            
+        
+                STRUCT('Bounces_F' as Metric, Bounces_F as Data)
+            
+                ,
+            
+        
+                STRUCT('Spend_F' as Metric, Spend_F as Data)
+            
+                ,
+            
+        
+                STRUCT('Transactions_F' as Metric, Transactions_F as Data)
+            
+                ,
+            
+        
+                STRUCT('Revenue_F' as Metric, Revenue_F as Data)
+            
+        
+        ] Metrics_data
+        from (
+select  Halo_Country,
+        date_start date,
+        sum(sessions) Sessions_F,
+        sum(Impressions) Impressions_F,
+        sum(Adclickss) Adclicks_F,
+        sum(Addtocarts) Addtocarts_F ,
+        sum(Bounces) Bounces_F,
+        sum(Spend) Spend_F,
+        sum(Orders) Transactions_F,
+        sum(Revenue) Revenue_F
+       from `noted-computing-279322.halo_1_1_Egypt.fDailyAggMarketingFBGoogle`
+       where source_medium in ('facebook / cpc','facebook / paid')
+--        and  date_start!=current_date()
+       group by 1,2
+   ))
+cross join
+unnest(Metrics_data) as Metrics_data
+)) ta
+group by rollup(Halo_country, KPI, dateyear, datequarter, datemonth, dateweek, date)
+) where Halo_country is not null and KPI is not null
+and coalesce(date,dateweek,datemonth,datequarter,dateyear) is not null
+) where week_rno = 1
+) ta,
+`noted-computing-279322.halo_1_1_Egypt.refKPI` tb
+where ta.KPI = tb.KPI_VARIABLE
+union all
+select ta.* ,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',Enddate))) Value_DateRange,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevX_Enddate))) PrevValue_DateRange,
+concat(format_date('%d %b %y',parse_date('%Y-%m-%d',PrevYearX_Startdate)),' - ',format_date('%d %b %y',parse_date('%Y-%m-%d',PrevYearX_Enddate))) PrevYearValue_DateRange,
+case when lower(KPI) like '%bounce%' and lower(KPI) not like '%non%bounce' then safe_divide(-(Value-prevvalue),prevvalue) else safe_divide((Value-prevvalue),prevvalue) end Change_PrevX,
+case when lower(KPI) like '%bounce%' and lower(KPI) not like '%non%bounce' then safe_divide(-(Value-prevyearvalue),prevyearvalue) else safe_divide((Value-prevyearvalue),prevyearvalue) end Change_PrevYearX,
+tb.KPI_ID,
+tb.KPI_FORMAT
+from
+(
+select
+Halo_country,
+KPI,
+period_flag as XTD,
+period_id date,
+ifnull(Value,0) Value,
+
+ifnull(lag(Value,1) over (partition by Halo_country,KPI,period_flag order by period_id),0) prevvalue,
+
+ifnull(case when extract(year from parse_date('%Y-%m-%d',Startdate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Startdate),1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+)) then lag(Value,1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+) end,0) prevyearvalue,
+
+Startdate,
+Enddate,
+
+lag(Startdate,1) over (partition by Halo_country,KPI,period_flag order by period_id) PrevX_Startdate,
+
+lag(Enddate,1) over (partition by Halo_country,KPI,period_flag order by period_id) PrevX_Enddate,
+
+case when extract(year from parse_date('%Y-%m-%d',Startdate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Startdate),1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+)) then lag(Startdate,1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+) end PrevYearX_Startdate,
+
+case when extract(year from parse_date('%Y-%m-%d',Enddate)) - 1 = extract(year from lag(parse_date('%Y-%m-%d',Enddate),1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+)) then  lag(Enddate,1) over (partition by Halo_country,KPI,period_flag
+order by  substr(period_id,5), cast(substr(period_id,1,4) as int64)
+) end PrevYearX_Enddate
+
+
+
+-- prvValue
+from
+(
+select Halo_country,
+KPI,
+coalesce(date,dateweek,datemonth,datequarter,dateyear) period_id,
+CASE WHEN datequarter is null THEN 'Year'
+WHEN datemonth is null THEN 'Quarter'
+WHEN dateweek is null THEN 'Month'
+WHEN date is null THEN 'Week'
+ELSE 'Day' END period_flag,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then
+sum(Value) over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear))
+else Value end Value,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then
+min(Startdate) over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear))
+else Startdate end Startdate,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then
+max(Enddate) over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear))
+else Enddate end Enddate,
+case when CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END = 'W' then row_number() over(partition by Halo_country, KPI, CASE WHEN datequarter is null THEN 'Y'
+WHEN datemonth is null THEN 'Q'
+WHEN dateweek is null THEN 'M'
+WHEN date is null THEN 'W'
+ELSE 'D' END, coalesce(date,dateweek,datemonth,datequarter,dateyear) order by coalesce(date,dateweek,datemonth,datequarter,dateyear) desc)
+else 1 end week_rno
+from
+(
+select
+Halo_country,
+KPI,
+dateyear,
+datequarter,
+datemonth,
+dateweek,
+date,
+sum(Value) Value,
+min(date) Startdate,
+max(date) Enddate
+-- sum(case when date <
+from
+(
+select
+Halo_country,
+FORMAT_DATE('%Y-%m-%d', date) date,
+FORMAT_DATE('%Y-%W', date) dateweek,
+FORMAT_DATE('%Y-%m', date) datemonth,
+FORMAT_DATE('%Y-%Q', date) datequarter,
+FORMAT_DATE('%Y', date) dateyear,
+Metrics_data.Metric KPI,
+Metrics_data.Data Value,
+max(date) over () current_date
+from (
+select
+Halo_Country,
+date,
+Metrics_data
+from (
+select Halo_Country,date,
+       [
+       
+                STRUCT('Sessions_G' as Metric, Sessions_G as Data)
+            
+                ,
+            
+        
+                STRUCT('Impressions_G' as Metric, Impressions_G as Data)
+            
+                ,
+            
+        
+                STRUCT('Adclicks_G' as Metric, Adclicks_G as Data)
+            
+                ,
+            
+        
+                STRUCT('Addtocarts_G' as Metric, Addtocarts_G as Data)
+            
+                ,
+            
+        
+                STRUCT('Bounces_G' as Metric, Bounces_G as Data)
+            
+                ,
+            
+        
+                STRUCT('Spend_G' as Metric, Spend_G as Data)
+            
+                ,
+            
+        
+                STRUCT('Transactions_G' as Metric, Transactions_G as Data)
+            
+                ,
+            
+        
+                STRUCT('Revenue_G' as Metric, Revenue_G as Data)
+            
+        
+        ] Metrics_data
+        from (
+select Halo_Country,date_start date,sum(sessions) Sessions_G, sum(Impressions) Impressions_G, sum(Adclickss) Adclicks_G, sum(Addtocarts) Addtocarts_G , sum(Bounces) Bounces_G, sum(Spend) Spend_G,
+       sum(Orders) Transactions_G,sum(Revenue) Revenue_G
+       from `noted-computing-279322.halo_1_1_Egypt.fDailyAggMarketingFBGoogle` where source_medium in ('google / cpc')
+--                                                                  and  date_start!=current_date()
+       group by 1,2
+
+   ))
+cross join
+unnest(Metrics_data) as Metrics_data
+)) ta
+group by rollup(Halo_country, KPI, dateyear, datequarter, datemonth, dateweek, date)
+) where Halo_country is not null and KPI is not null
+and coalesce(date,dateweek,datemonth,datequarter,dateyear) is not null
+) where week_rno = 1
+) ta,
+`noted-computing-279322.halo_1_1_Egypt.refKPI` tb
+where ta.KPI = tb.KPI_VARIABLE
+
